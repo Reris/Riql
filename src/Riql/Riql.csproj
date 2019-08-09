@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/Reris/Riql</RepositoryUrl>
     <PackageTags>Riql Linq REST Rsql Queryable Parser;</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageIconUrl>https://github.com/Reris/Riql/blob/master/assets/Riql-128.png</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/Reris/Riql/master/assets/Riql-128.png</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
