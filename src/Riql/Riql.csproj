@@ -7,15 +7,16 @@
     <AssemblyVersion>0.6.0</AssemblyVersion>
     <PackageLicenseFile></PackageLicenseFile>
     <Authors>Rainer Erismann</Authors>
+    <Title>RIQL (Reduced Items Query Language) for filtering queries by string.</Title>
     <Description>RIQL (Reduced Items Query Language) is a small straight forward query parser for all Linq queryables like Entity Framework, Linq2Db, InMemory-Lists, etc.</Description>
     <NeutralLanguage></NeutralLanguage>
     <PackageProjectUrl>https://github.com/Reris/Riql</PackageProjectUrl>
     <Copyright></Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/Reris/Riql</RepositoryUrl>
-    <PackageTags>Riql;Linq;REST;Rsql;Queryable;Parser;</PackageTags>
+    <PackageTags>Riql Linq REST Rsql Queryable Parser;</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageIconUrl>https://github.com/Reris/Riql/assets/Riql-128.png</PackageIconUrl>
+    <PackageIconUrl>https://github.com/Reris/Riql/blob/master/assets/Riql-128.png</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
