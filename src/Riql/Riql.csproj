@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.6.0</Version>
+    <FileVersion>0.6.0</FileVersion>
+    <AssemblyVersion>0.6.0</AssemblyVersion>
+    <PackageLicenseFile></PackageLicenseFile>
+    <Authors>Rainer Erismann</Authors>
+    <Description>RIQL (Reduced Items Query Language) is a small straight forward query parser for all Linq queryables like Entity Framework, Linq2Db, InMemory-Lists, etc.</Description>
+    <NeutralLanguage></NeutralLanguage>
+    <PackageProjectUrl>https://github.com/Reris/Riql</PackageProjectUrl>
+    <Copyright></Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Reris/Riql</RepositoryUrl>
+    <PackageTags>Riql;Linq;REST;Rsql;Queryable;Parser;</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIconUrl>https://github.com/Reris/Riql/assets/Riql-128.png</PackageIconUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>3021</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.7.2" />
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+</Project>
