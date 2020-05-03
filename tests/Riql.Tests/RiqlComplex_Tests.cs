@@ -325,11 +325,10 @@ namespace Riql.Tests
                                           ? new {o.Manager.FirstName, Room = o.Manager.RoomNr}
                                           : null
                     });
-                var x = projection;
-                var expected = (from p in x where p.ManagerInfo != null && p.ManagerInfo.Room == 105 select p).ToList();
+                var expected = (from p in projection where p.ManagerInfo != null && p.ManagerInfo.Room == 105 select p).ToList();
 
                 // Act
-                var result = x.ApplyRiql("$w=ManagerInfo.Room==105").ToList();
+                var result = projection.ApplyRiql("$w=ManagerInfo.Room==105").ToList();
 
                 // Assert
                 result.Should().NotBeEmpty();
