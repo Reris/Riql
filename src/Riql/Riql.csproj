@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Version>0.6.0</Version>
     <FileVersion>0.6.0</FileVersion>
     <AssemblyVersion>0.6.0</AssemblyVersion>
@@ -16,7 +16,8 @@
     <RepositoryUrl>https://github.com/Reris/Riql</RepositoryUrl>
     <PackageTags>Riql Linq REST Rsql Queryable Parser;</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageIconUrl>https://raw.githubusercontent.com/Reris/Riql/master/assets/Riql-128.png</PackageIconUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageIcon>Riql-128.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,9 +27,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.7.2" />
-    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.8.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\assets\Riql-128.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

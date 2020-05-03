@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Antlr4.Runtime.Tree;
-using JetBrains.Annotations;
 
 namespace Riql.Transpiler.Rsql
 {
     public class RsqlVisitor<T> : RsqlBaseVisitor<Expression<Func<T, bool>>>
     {
-        [NotNull]
         private readonly ComparisonBuilder _expressionHelper;
-
-        [NotNull]
         private readonly ParameterExpression _parameter;
 
-        public RsqlVisitor([NotNull] ComparisonBuilder expressionHelper)
+        public RsqlVisitor(ComparisonBuilder expressionHelper)
         {
             this._expressionHelper = expressionHelper ?? throw new ArgumentNullException(nameof(expressionHelper));
             this._parameter = Expression.Parameter(typeof(T), "x");
@@ -65,7 +61,7 @@ namespace Riql.Transpiler.Rsql
                 return context.group().Accept(this);
             }
 
-            return context.comparison()?.Accept(this);
+            return context.comparison()?.Accept(this)!;
         }
 
 
@@ -73,7 +69,7 @@ namespace Riql.Transpiler.Rsql
         {
             if (context.GROUP_START().Symbol.TokenIndex != -1 && context.GROUP_END().Symbol.TokenIndex != -1)
             {
-                return context.or()?.Accept(this);
+                return context.or()?.Accept(this)!;
             }
 
             throw new InvalidGroupException(context);

@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -11,11 +10,9 @@ namespace Riql.Transpiler
 {
     public class PropertyAccessor
     {
-        [NotNull]
         private static readonly ConcurrentDictionary<Type, Dictionary<string, PropertyInfo>> JsonPropertyInfos =
             new ConcurrentDictionary<Type, Dictionary<string, PropertyInfo>>();
 
-        [NotNull]
         private readonly NamingStrategy _namingStrategy;
 
         public PropertyAccessor()
@@ -23,7 +20,7 @@ namespace Riql.Transpiler
         {
         }
 
-        public PropertyAccessor([NotNull] NamingStrategy namingStrategy)
+        public PropertyAccessor(NamingStrategy namingStrategy)
         {
             this._namingStrategy = namingStrategy ?? throw new ArgumentNullException(nameof(namingStrategy));
         }
@@ -52,14 +49,13 @@ namespace Riql.Transpiler
             var attribute = propertyInfo.GetCustomAttribute<JsonPropertyAttribute>();
             if (attribute != null)
             {
-                return attribute.PropertyName;
+                return attribute.PropertyName!;
             }
 
             return this._namingStrategy.GetPropertyName(propertyName, false);
         }
 
-        [CanBeNull]
-        public PropertyInfo FindProperty([NotNull] Type type, [NotNull] string name)
+        public PropertyInfo? FindProperty(Type type, string name)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
             name = name ?? throw new ArgumentNullException(nameof(name));
@@ -69,9 +65,7 @@ namespace Riql.Transpiler
             return result;
         }
 
-
-        [NotNull]
-        public ExpressionPath ParsePath([NotNull] ParameterExpression parameter, [NotNull] string propertyPath)
+        public ExpressionPath ParsePath(ParameterExpression parameter, string propertyPath)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             propertyPath = propertyPath ?? throw new ArgumentNullException(nameof(propertyPath));
@@ -96,8 +90,7 @@ namespace Riql.Transpiler
             return new ExpressionPath(pathExpression, expressionSteps);
         }
 
-        [CanBeNull]
-        private MemberExpression ParseProperty([NotNull] Expression current, [NotNull] string property)
+        private MemberExpression? ParseProperty(Expression current, string property)
         {
             var propertyInfo = this.FindProperty(current.Type, property);
             return propertyInfo == null

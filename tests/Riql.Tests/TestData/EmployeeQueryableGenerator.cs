@@ -33,7 +33,7 @@ namespace Riql.Tests.TestData
             return this.GetEnumerator();
         }
 
-        private static (DbSet<Employee>, IDisposable) BuildEmployeesEfContext()
+        private static (IQueryable<Employee>, IDisposable) BuildEmployeesEfContext()
         {
             var connection = new SqliteConnection("DataSource=:memory:");
             try
@@ -94,6 +94,7 @@ namespace Riql.Tests.TestData
 
                 // Fluent API
                 modelBuilder.Entity<Employee>().HasIndex(a => a.Id);
+                modelBuilder.Entity<Employee>().Property(a => a.Salary).HasConversion<double>();
             }
         }
 

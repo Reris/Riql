@@ -4,25 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace Riql.Transpiler.Rsql
 {
     public static class ContainsHelper
     {
-        [NotNull]
         public static readonly MethodInfo StringContainsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] {typeof(string)})
-                                                                 ?? throw new MissingMethodException(typeof(string).Name, nameof(string.Contains));
+                                                                 ?? throw new MissingMethodException(nameof(String), nameof(string.Contains));
 
-        [NotNull]
         public static readonly MethodInfo StringStartsWithMethod = typeof(string).GetMethod(nameof(string.StartsWith), new[] {typeof(string)})
-                                                                   ?? throw new MissingMethodException(typeof(string).Name, nameof(string.StartsWith));
+                                                                   ?? throw new MissingMethodException(nameof(String), nameof(string.StartsWith));
 
-        [NotNull]
         public static readonly MethodInfo StringEndsWithMethod = typeof(string).GetMethod(nameof(string.EndsWith), new[] {typeof(string)})
-                                                                 ?? throw new MissingMethodException(typeof(string).Name, nameof(string.EndsWith));
+                                                                 ?? throw new MissingMethodException(nameof(String), nameof(string.EndsWith));
 
-        [NotNull]
         private static readonly ConcurrentDictionary<Type, ListContainsHelper> ListContainsHelpers = new ConcurrentDictionary<Type, ListContainsHelper>();
 
         public static ListContainsHelper GetOrRegistryContainsMethodInfo(Type type)
@@ -40,7 +35,7 @@ namespace Riql.Transpiler.Rsql
             private readonly Type _listType;
 
 
-            public ListContainsHelper([NotNull] Type type)
+            public ListContainsHelper(Type type)
             {
                 this._elementType = type ?? throw new ArgumentNullException(nameof(type));
                 this._listType = typeof(List<>).MakeGenericType(type);

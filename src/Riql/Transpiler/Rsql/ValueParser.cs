@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Riql.Transpiler.Rsql
 {
     public static class ValueParser
     {
-        public delegate ParseResult TryParse([NotNull] Type type, [NotNull] string str);
+        public delegate ParseResult TryParse(Type type, string str);
 
-        [NotNull]
         public static readonly Dictionary<Type, TryParse> Parsers = new Dictionary<Type, TryParse>
         {
             {typeof(string), (t, s) => ParseResult.Succeed(s)},
@@ -44,8 +42,7 @@ namespace Riql.Transpiler.Rsql
             }
         };
 
-        [NotNull]
-        private static object ParseValue([NotNull] RsqlParser.ValueContext valueContext, [NotNull] Type type, [NotNull] TryParse parser)
+        private static object ParseValue(RsqlParser.ValueContext valueContext, Type type, TryParse parser)
         {
             valueContext = valueContext ?? throw new ArgumentNullException(nameof(valueContext));
             type = type ?? throw new ArgumentNullException(nameof(type));
@@ -58,7 +55,7 @@ namespace Riql.Transpiler.Rsql
                 var value = valueContext.GetText();
                 text = value.Length == 2
                            ? string.Empty
-                           : value.Substring(1, value.Length - 2).Replace("\\" + replace, replace);
+                           : value[1..^1].Replace("\\" + replace, replace);
             }
             else
             {
@@ -74,8 +71,7 @@ namespace Riql.Transpiler.Rsql
             return result.Value;
         }
 
-        [NotNull]
-        public static List<object> GetValues([NotNull] Type type, [NotNull] RsqlParser.ArgumentsContext argumentsContext)
+        public static List<object> GetValues(Type type, RsqlParser.ArgumentsContext argumentsContext)
         {
             type = type.FindNullableValueType() ?? type ?? throw new ArgumentNullException(nameof(type));
             argumentsContext = argumentsContext ?? throw new ArgumentNullException(nameof(argumentsContext));
@@ -96,9 +92,7 @@ namespace Riql.Transpiler.Rsql
             return items;
         }
 
-
-        [NotNull]
-        public static object GetValue([NotNull] Type type, [NotNull] RsqlParser.ValueContext valueContext)
+        public static object GetValue(Type type, RsqlParser.ValueContext valueContext)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
             valueContext = valueContext ?? throw new ArgumentNullException(nameof(valueContext));
@@ -115,7 +109,7 @@ namespace Riql.Transpiler.Rsql
             return result;
         }
 
-        public struct ParseResult
+        public readonly struct ParseResult
         {
             public bool Success { get; }
             public object Value { get; }
@@ -133,7 +127,7 @@ namespace Riql.Transpiler.Rsql
 
             public static ParseResult Fail()
             {
-                return new ParseResult(false, null);
+                return new ParseResult(false, null!);
             }
         }
     }

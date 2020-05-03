@@ -43,7 +43,7 @@ namespace Riql.Tests.TestData
             return this.GetEnumerator();
         }
 
-        private static (DbSet<Order>, IDisposable) BuildOrdersEfContext()
+        private static (IQueryable<Order>, IDisposable) BuildOrdersEfContext()
         {
             var connection = new SqliteConnection("DataSource=:memory:");
             try
@@ -112,7 +112,9 @@ namespace Riql.Tests.TestData
 
                 // Fluent API
                 modelBuilder.Entity<Order>().HasIndex(a => a.Id);
+                modelBuilder.Entity<Order>().Property(a => a.Price).HasConversion<double>();
                 modelBuilder.Entity<Employee>().HasIndex(a => a.Id);
+                modelBuilder.Entity<Employee>().Property(a => a.Salary).HasConversion<double>();
             }
         }
 

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Antlr4.Runtime;
-using JetBrains.Annotations;
 using Riql.Transpiler;
 using Riql.Transpiler.Rsql;
 
@@ -10,20 +9,17 @@ namespace Riql
 {
     public static class Riql
     {
-        [NotNull]
         public static PropertyAccessor DefaultPropertyAccessor = new PropertyAccessor();
 
-        [NotNull]
-        public static IQueryable<T> ApplyRiql<T>([NotNull] this IQueryable<T> query, [CanBeNull] string riql, int maxTake = -1)
+        public static IQueryable<T> ApplyRiql<T>(this IQueryable<T> query, string? riql, int maxTake = -1)
         {
             return query.ApplyRiql(riql, Riql.DefaultPropertyAccessor, maxTake);
         }
 
-        [NotNull]
         public static IQueryable<T> ApplyRiql<T>(
-            [NotNull] this IQueryable<T> query,
-            [CanBeNull] string riql,
-            [NotNull] PropertyAccessor propertyAccessor,
+            this IQueryable<T> query,
+            string? riql,
+            PropertyAccessor propertyAccessor,
             int maxTake = -1)
         {
             query = query ?? throw new ArgumentNullException(nameof(query));
@@ -42,8 +38,7 @@ namespace Riql
             return result;
         }
 
-        [NotNull]
-        public static Expression<Func<T, bool>> GetRsqlPredicate<T>([CanBeNull] string rsql, [NotNull] ComparisonBuilder comparisonBuilder)
+        public static Expression<Func<T, bool>> GetRsqlPredicate<T>(string? rsql, ComparisonBuilder comparisonBuilder)
         {
             comparisonBuilder = comparisonBuilder ?? throw new ArgumentNullException(nameof(comparisonBuilder));
             if (string.IsNullOrWhiteSpace(rsql))

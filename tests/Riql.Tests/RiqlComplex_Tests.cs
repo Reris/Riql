@@ -288,5 +288,54 @@ namespace Riql.Tests
                 result.Should().BeEquivalentTo(expected);
             }
         }
+
+        [Theory]
+        [ClassData(typeof(OrderQueryableGenerator))]
+        public void Apply_WhereProjectionLevel1_ShouldFilterProjection(IQueryable<Order> orders, IDisposable lifetime)
+        {
+            using (lifetime)
+            {
+                // Arrange
+                var projection = orders.Select(o => new {o.Id, o.Requirement, o.Manager});
+                var expected = (from p in projection where p.Manager != null && p.Manager.RoomNr == 105 select p).ToList();
+
+                // Act
+                var result = projection.ApplyRiql("$w=Manager.RoomNr==105").ToList();
+
+                // Assert
+                result.Should().NotBeEmpty();
+                result.Should().HaveSameCount(expected);
+                result.Should().BeEquivalentTo(expected);
+            }
+        }
+
+        [Theory]
+        [ClassData(typeof(OrderQueryableGenerator))]
+        public void Apply_WhereProjectionLevel2_ShouldFilterProjection(IQueryable<Order> orders, IDisposable lifetime)
+        {
+            using (lifetime)
+            {
+                // Arrange
+                var projection = orders.Select(
+                    o => new
+                    {
+                        o.Id,
+                        o.Requirement,
+                        ManagerInfo = o.Manager != null
+                                          ? new {o.Manager.FirstName, Room = o.Manager.RoomNr}
+                                          : null
+                    });
+                var x = projection;
+                var expected = (from p in x where p.ManagerInfo != null && p.ManagerInfo.Room == 105 select p).ToList();
+
+                // Act
+                var result = x.ApplyRiql("$w=ManagerInfo.Room==105").ToList();
+
+                // Assert
+                result.Should().NotBeEmpty();
+                result.Should().HaveSameCount(expected);
+                result.Should().BeEquivalentTo(expected);
+            }
+        }
     }
 }

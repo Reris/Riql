@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace Riql.Transpiler.Rsql
 {
@@ -49,16 +48,14 @@ namespace Riql.Transpiler.Rsql
             typeof(sbyte)
         };
 
-        [NotNull]
         private readonly PropertyAccessor _propertyAccessor;
 
-
-        public ComparisonBuilder([NotNull] PropertyAccessor propertyAccessor)
+        public ComparisonBuilder(PropertyAccessor propertyAccessor)
         {
             this._propertyAccessor = propertyAccessor ?? throw new ArgumentNullException(nameof(propertyAccessor));
         }
 
-        public virtual bool IsEquatableType([NotNull] Type type)
+        public virtual bool IsEquatableType(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -66,7 +63,7 @@ namespace Riql.Transpiler.Rsql
         }
 
 
-        public void EnsureEquatable([NotNull] Type type, [NotNull] RsqlParser.ComparisonContext context)
+        public void EnsureEquatable(Type type, RsqlParser.ComparisonContext context)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -78,14 +75,14 @@ namespace Riql.Transpiler.Rsql
             }
         }
 
-        public virtual bool IsComparableType([NotNull] Type type)
+        public virtual bool IsComparableType(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
             return ComparisonBuilder.DefaultComparableTypes.Contains(type);
         }
 
-        public void EnsureComparable([NotNull] Type type, [NotNull] RsqlParser.ComparisonContext context)
+        public void EnsureComparable(Type type, RsqlParser.ComparisonContext context)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -97,12 +94,10 @@ namespace Riql.Transpiler.Rsql
             }
         }
 
-
-        [NotNull]
         public virtual Expression<Func<T, bool>> BuildComparison<T>(
-            [NotNull] string comparator,
-            [NotNull] ParameterExpression parameter,
-            [NotNull] RsqlParser.ComparisonContext context)
+            string comparator,
+            ParameterExpression parameter,
+            RsqlParser.ComparisonContext context)
         {
             comparator = comparator ?? throw new ArgumentNullException(nameof(comparator));
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
@@ -141,8 +136,7 @@ namespace Riql.Transpiler.Rsql
             }
         }
 
-        [NotNull]
-        private static object GetSingleValue([NotNull] Type type, [NotNull] RsqlParser.ComparisonContext context)
+        private static object GetSingleValue(Type type, RsqlParser.ComparisonContext context)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -156,32 +150,28 @@ namespace Riql.Transpiler.Rsql
             return ValueParser.GetValue(type, value.First());
         }
 
-        [NotNull]
-        public static Expression PathCanBeNull([NotNull] ExpressionPath expressionPath, [NotNull] Expression compare)
+        public static Expression PathCanBeNull(ExpressionPath expressionPath, Expression compare)
         {
             expressionPath = expressionPath ?? throw new ArgumentNullException(nameof(expressionPath));
             return ComparisonBuilder.CheckNullInPath(expressionPath.ExpressionSteps, true, compare, true);
         }
 
-        [NotNull]
-        public static Expression PathNotNull([NotNull] ExpressionPath expressionPath, [NotNull] Expression compare)
+        public static Expression PathNotNull(ExpressionPath expressionPath, Expression compare)
         {
             expressionPath = expressionPath ?? throw new ArgumentNullException(nameof(expressionPath));
             return ComparisonBuilder.CheckNullInPath(expressionPath.ExpressionSteps, false, compare, true);
         }
 
-        [NotNull]
-        public static Expression FullPathNotNull([NotNull] ExpressionPath expressionPath, [NotNull] Expression compare)
+        public static Expression FullPathNotNull(ExpressionPath expressionPath, Expression compare)
         {
             expressionPath = expressionPath ?? throw new ArgumentNullException(nameof(expressionPath));
             return ComparisonBuilder.CheckNullInPath(expressionPath.ExpressionSteps, false, compare, false);
         }
 
-        [NotNull]
         private static Expression CheckNullInPath(
-            [NotNull] IReadOnlyList<Expression> steps,
+            IReadOnlyList<Expression> steps,
             bool canBeNull,
-            [NotNull] Expression compare,
+            Expression compare,
             bool ignoreLast)
         {
             steps = steps ?? throw new ArgumentNullException(nameof(steps));
@@ -207,15 +197,14 @@ namespace Riql.Transpiler.Rsql
             return result;
         }
 
-        public static bool CanBeNull([NotNull] Type type)
+        public static bool CanBeNull(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
             return !type.IsValueType || type.FindNullableValueType() != null;
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> EqualComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> EqualComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -252,8 +241,7 @@ namespace Riql.Transpiler.Rsql
                 parameter);
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> NotEqualComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> NotEqualComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -263,8 +251,7 @@ namespace Riql.Transpiler.Rsql
             return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> IsNullComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> IsNullComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -296,8 +283,7 @@ namespace Riql.Transpiler.Rsql
             return result;
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> LessThanComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> LessThanComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -315,8 +301,7 @@ namespace Riql.Transpiler.Rsql
                 parameter);
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> LessOrEqualComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> LessOrEqualComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -334,8 +319,7 @@ namespace Riql.Transpiler.Rsql
                 parameter);
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> GreaterThanComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> GreaterThanComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -353,8 +337,7 @@ namespace Riql.Transpiler.Rsql
                 parameter);
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> GreaterOrEqualComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> GreaterOrEqualComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -372,8 +355,7 @@ namespace Riql.Transpiler.Rsql
                 parameter);
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> LikeComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> LikeComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -413,8 +395,7 @@ namespace Riql.Transpiler.Rsql
                 parameter);
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> InComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> InComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));
@@ -435,8 +416,7 @@ namespace Riql.Transpiler.Rsql
                 parameter);
         }
 
-        [NotNull]
-        public Expression<Func<T, bool>> NotInComparator<T>([NotNull] ParameterExpression parameter, [NotNull] RsqlParser.ComparisonContext context)
+        public Expression<Func<T, bool>> NotInComparator<T>(ParameterExpression parameter, RsqlParser.ComparisonContext context)
         {
             parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
             context = context ?? throw new ArgumentNullException(nameof(context));

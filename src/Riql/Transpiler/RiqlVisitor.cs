@@ -3,27 +3,22 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using Antlr4.Runtime.Tree;
-using JetBrains.Annotations;
 using Riql.Transpiler.Rsql;
 
 namespace Riql.Transpiler
 {
     public class RiqlVisitor<T> : RiqlBaseVisitor<IQueryable<T>>
     {
-        [NotNull]
         [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable", Justification = "Debug comparisons")]
         private readonly IQueryable<T> _original;
 
-        [NotNull]
         private readonly PropertyAccessor _propertyAccessor;
-
-        [NotNull]
         private IQueryable<T> _current;
 
         private bool _hasTake;
         private bool _orderingBy;
 
-        public RiqlVisitor([NotNull] IQueryable<T> queryable, [NotNull] PropertyAccessor propertyAccessor, int maxTake)
+        public RiqlVisitor(IQueryable<T> queryable, PropertyAccessor propertyAccessor, int maxTake)
         {
             this._propertyAccessor = propertyAccessor ?? throw new ArgumentNullException(nameof(propertyAccessor));
             this._original = queryable ?? throw new ArgumentNullException(nameof(queryable));
@@ -32,8 +27,6 @@ namespace Riql.Transpiler
         }
 
         public int MaxTake { get; }
-
-        [NotNull]
         protected override IQueryable<T> DefaultResult => this._current;
 
         public override IQueryable<T> VisitStart(RiqlParser.StartContext context)
