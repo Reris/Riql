@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.6.0</Version>
-    <FileVersion>0.6.0</FileVersion>
-    <AssemblyVersion>0.6.0</AssemblyVersion>
+    <Version>0.7.0</Version>
+    <FileVersion>0.7.0</FileVersion>
+    <AssemblyVersion>0.7.0</AssemblyVersion>
     <PackageLicenseFile></PackageLicenseFile>
     <Authors>Rainer Erismann</Authors>
     <Title>RIQL (Reduced Items Query Language) for filtering queries by string.</Title>
@@ -18,6 +18,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>Riql-128.png</PackageIcon>
+	<LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,8 +28,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.8.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
+    <PackageReference Include="System.Text.Json" Version="6.0.5" />
   </ItemGroup>
 
   <ItemGroup>

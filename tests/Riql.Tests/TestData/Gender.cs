@@ -1,9 +1,8 @@
-namespace Riql.Tests.TestData
+namespace Riql.Tests.TestData;
+
+public enum Gender
 {
-    public enum Gender
-    {
-        Male,
-        Female,
-        Other
-    }
+    Male,
+    Female,
+    Other
 }

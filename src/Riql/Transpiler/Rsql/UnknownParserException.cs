@@ -1,14 +1,13 @@
 ﻿using System;
-using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 
-namespace Riql.Transpiler.Rsql
+namespace Riql.Transpiler.Rsql;
+
+public class UnknownParserException
+    : RsqlException
 {
-    public class UnknownParserException
-        : RsqlException
+    public UnknownParserException(IParseTree context, Type type, Exception? innerException = null)
+        : base(context, $"No known parser for type '{type.Name}'.", innerException)
     {
-        public UnknownParserException(ParserRuleContext context, Type type, Exception? innerException = null)
-            : base(context, $"No known parser for type '{type.Name}'.", innerException)
-        {
-        }
     }
 }

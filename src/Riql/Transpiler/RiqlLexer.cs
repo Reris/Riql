@@ -1,7 +1,6 @@
-﻿namespace Riql.Transpiler
+﻿namespace Riql.Transpiler;
+
+public partial class RiqlLexer
 {
-    public partial class RiqlLexer
-    {
-        public bool UseFullText { get; set; }
-    }
+    public bool UseFullText { get; set; }
 }

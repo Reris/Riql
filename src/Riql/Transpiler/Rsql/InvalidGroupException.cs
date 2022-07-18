@@ -1,13 +1,12 @@
 ﻿using System;
 using Antlr4.Runtime.Tree;
 
-namespace Riql.Transpiler.Rsql
+namespace Riql.Transpiler.Rsql;
+
+public class InvalidGroupException : RsqlException
 {
-    public class InvalidGroupException : RsqlException
+    public InvalidGroupException(IParseTree context, Exception? innerException = null)
+        : base(context, $"Invalid group: {context.GetText()}", innerException)
     {
-        public InvalidGroupException(IParseTree context, Exception? innerException = null)
-            : base(context, $"Invalid group: {context.GetText()}", innerException)
-        {
-        }
     }
 }

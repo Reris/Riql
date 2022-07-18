@@ -1,11 +1,10 @@
 using System;
 
-namespace Riql.Tests.TestData
+namespace Riql.Tests.TestData;
+
+public struct DisposableMock : IDisposable
 {
-    public struct DisposableMock : IDisposable
+    public void Dispose()
     {
-        public void Dispose()
-        {
-        }
     }
 }

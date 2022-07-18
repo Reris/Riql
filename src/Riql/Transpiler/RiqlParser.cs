@@ -1,11 +1,10 @@
-﻿namespace Riql.Transpiler
+﻿namespace Riql.Transpiler;
+
+public partial class RiqlParser
 {
-    public partial class RiqlParser
+    private void UseFullText(bool use)
     {
-        private void UseFullText(bool use)
-        {
-            var lexer = (RiqlLexer) this.TokenStream.TokenSource;
-            lexer.UseFullText = use;
-        }
+        var lexer = (RiqlLexer)this.TokenStream.TokenSource;
+        lexer.UseFullText = use;
     }
 }
