@@ -20,10 +20,10 @@ public class EmployeeQueryableGenerator : IEnumerable<object[]>
     {
         yield return new object[] { TestSamples.GetEmployees().AsQueryable(), new DisposableMock() };
 
-        var (efQueryable, efConnection) = EmployeeQueryableGenerator.BuildEmployeesEfContext();
+        var (efQueryable, efConnection) = BuildEmployeesEfContext();
         yield return new object[] { efQueryable, efConnection };
 
-        var (linq2dbQueryable, linq2dbConnection) = EmployeeQueryableGenerator.BuildEmployeesLinq2DbContext();
+        var (linq2dbQueryable, linq2dbConnection) = BuildEmployeesLinq2DbContext();
         yield return new object[] { linq2dbQueryable, linq2dbConnection };
     }
 
@@ -79,14 +79,9 @@ public class EmployeeQueryableGenerator : IEnumerable<object[]>
         }
     }
 
-    public class EmployeeDbContext : DbContext
+    public class EmployeeDbContext(DbContextOptions<EmployeeDbContext> options) : DbContext(options)
     {
-        public EmployeeDbContext(DbContextOptions<EmployeeDbContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<Employee> Employees { get; set; } = default!;
+        public DbSet<Employee> Employees { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -98,13 +93,9 @@ public class EmployeeQueryableGenerator : IEnumerable<object[]>
         }
     }
 
-    public class EmployeeLinq2Db : DataConnection
+    public class EmployeeLinq2Db(DbConnection connection)
+        : DataConnection(new DataOptions().UseConnection(SQLiteTools.GetDataProvider(SQLiteProvider.Microsoft), connection))
     {
-        public EmployeeLinq2Db(DbConnection connection)
-            : base(SQLiteTools.GetDataProvider(ProviderName.SQLiteMS), connection)
-        {
-        }
-
         public ITable<Employee> Employees => this.GetTable<Employee>();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using FluentAssertions;
+using AwesomeAssertions;
 using Riql.Tests.TestData;
 using Xunit;
 
@@ -9,8 +9,8 @@ public class RiqlWhere_Tests
 {
     private Unit[] GetUnits()
     {
-        return new[]
-        {
+        return
+        [
             new Unit(1, false),
             new Unit(2, true),
             new Unit(3, false)
@@ -55,13 +55,13 @@ public class RiqlWhere_Tests
                     }
                 }
             }
-        };
+        ];
     }
 
     private Unit[] GetBoolUnits()
     {
-        return new[]
-        {
+        return
+        [
             new Unit(1, true)
             {
                 Bool = true,
@@ -117,7 +117,7 @@ public class RiqlWhere_Tests
                     }
                 }
             }
-        };
+        ];
     }
 
     [Theory]

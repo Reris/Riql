@@ -1,16 +1,17 @@
+using LinqToDB;
+using LinqToDB.Data;
+using LinqToDB.DataProvider.SQLite;
+using LinqToDB.Mapping;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using LinqToDB;
-using LinqToDB.Data;
-using LinqToDB.DataProvider.SQLite;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Riql.Tests.TestData;
 
@@ -19,22 +20,21 @@ public class OrderQueryableGenerator : IEnumerable<object[]>
     public IEnumerator<object[]> GetEnumerator()
     {
         var employees = TestSamples.GetEmployees();
-        yield return new object[]
-        {
-            TestSamples.GetOrders().Select(
-                o =>
-                {
-                    o.Manager = employees.FirstOrDefault(e => e.Id == o.ManagerId);
-                    return o;
-                }).AsQueryable(),
+        yield return
+        [
+            TestSamples.GetOrders().Select(o =>
+            {
+                o.Manager = employees.FirstOrDefault(e => e.Id == o.ManagerId);
+                return o;
+            }).AsQueryable(),
             new DisposableMock()
-        };
+        ];
 
-        var (efQueryable, efConnection) = OrderQueryableGenerator.BuildOrdersEfContext();
-        yield return new object[] { efQueryable, efConnection };
+        var (efQueryable, efConnection) = BuildOrdersEfContext();
+        yield return [efQueryable, efConnection];
 
-        var (linq2dbQueryable, linq2dbConnection) = OrderQueryableGenerator.BuildOrdersLinq2DbContext();
-        yield return new object[] { linq2dbQueryable, linq2dbConnection };
+        var (linq2dbQueryable, linq2dbConnection) = BuildOrdersLinq2DbContext();
+        yield return [linq2dbQueryable, linq2dbConnection];
     }
 
     [ExcludeFromCodeCoverage]
@@ -96,15 +96,10 @@ public class OrderQueryableGenerator : IEnumerable<object[]>
         }
     }
 
-    public class OrdersDbContext : DbContext
+    public class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbContext(options)
     {
-        public OrdersDbContext(DbContextOptions<OrdersDbContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<Order> Orders { get; set; } = default!;
-        public DbSet<Employee> Employees { get; set; } = default!;
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<Employee> Employees { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -122,9 +117,11 @@ public class OrderQueryableGenerator : IEnumerable<object[]>
     public class OrderLinq2Db : DataConnection
     {
         public OrderLinq2Db(DbConnection connection)
-            : base(SQLiteTools.GetDataProvider(ProviderName.SQLiteMS), connection)
+            : base(new DataOptions().UseConnection(SQLiteTools.GetDataProvider(SQLiteProvider.Microsoft), connection))
         {
-            this.MappingSchema.GetFluentMappingBuilder().Entity<Order>().Association(o => o.Manager, (o, e) => o.ManagerId == e!.Id);
+            var builder = new FluentMappingBuilder(this.MappingSchema);
+            builder.Entity<Order>().Association(o => o.Manager, (o, e) => o.ManagerId == e!.Id);
+            builder.Build();
         }
 
         public ILoadWithQueryable<Order, Employee?> Orders => this.GetTable<Order>().LoadWith(o => o.Manager);

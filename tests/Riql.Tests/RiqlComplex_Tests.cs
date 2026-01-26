@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
-using FluentAssertions.Equivalency;
+using AwesomeAssertions;
+using AwesomeAssertions.Equivalency;
 using Microsoft.EntityFrameworkCore;
 using Riql.Tests.TestData;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Riql.Tests;
 
 public class RiqlComplex_Tests
 {
-    private EquivalencyAssertionOptions<Order> WithSameOrder(EquivalencyAssertionOptions<Order> o)
+    private EquivalencyOptions<Order> WithSameOrder(EquivalencyOptions<Order> o)
     {
         return o.WithStrictOrdering();
     }
@@ -176,9 +177,9 @@ public class RiqlComplex_Tests
         using (lifetime)
         {
             // Arrange
-            var firstNames = new[] { "Jack", "Jane" };
+            var firstNames = new List<string> { "Jack", "Jane" };
             var expected = (from o in orders
-                            where o.Manager != null && (firstNames.Contains(o.Manager.FirstName) || o.Manager.Salary > 8000) && o.Price > 0
+                            where o.Manager != null && (firstNames.Contains(o.Manager.FirstName!) || o.Manager.Salary > 8000) && o.Price > 0
                             select o).ToList();
 
             // Act
@@ -315,22 +316,21 @@ public class RiqlComplex_Tests
     public void Apply_WhereProjectionLevel2_ShouldFilterProjection(IQueryable<Order> orders, IDisposable lifetime)
     {
         if (orders is DbSet<Order>)
-        { 
-            Assert.Null("EFCore unterstützt diese Art von Queries mal wieder nicht.");
+        {
+            Assert.Skip("EFCore unterstützt diese Art von Queries mal wieder nicht.");
         }
 
         using (lifetime)
         {
             // Arrange
-            var projection = orders.Select(
-                o => new
-                {
-                    o.Id,
-                    o.Requirement,
-                    ManagerInfo = o.Manager != null
-                                      ? new { o.Manager.FirstName, Room = o.Manager.RoomNr }
-                                      : null
-                });
+            var projection = orders.Select(o => new
+            {
+                o.Id,
+                o.Requirement,
+                ManagerInfo = o.Manager != null
+                                  ? new { o.Manager.FirstName, Room = o.Manager.RoomNr }
+                                  : null
+            });
             var expected = (from p in projection where p.ManagerInfo != null && p.ManagerInfo.Room == 105 select p).ToList();
 
             // Act

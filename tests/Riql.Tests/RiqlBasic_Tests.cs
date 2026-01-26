@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using FluentAssertions;
-using FluentAssertions.Equivalency;
+using AwesomeAssertions;
+using AwesomeAssertions.Equivalency;
 using Riql.Tests.TestData;
 using Riql.Transpiler;
 using Xunit;
@@ -10,7 +10,7 @@ namespace Riql.Tests;
 
 public class RiqlBasic_Tests
 {
-    private EquivalencyAssertionOptions<Employee> WithSameOrder(EquivalencyAssertionOptions<Employee> o)
+    private EquivalencyOptions<Employee> WithSameOrder(EquivalencyOptions<Employee> o)
     {
         return o.WithStrictOrdering();
     }
@@ -20,7 +20,7 @@ public class RiqlBasic_Tests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData(" \t \n ")]
-    public void Apply_NullOrEmpty_ShouldFilterItems(string riql)
+    public void Apply_NullOrEmpty_ShouldFilterItems(string? riql)
     {
         // Arrange
         var employees = TestSamples.GetEmployees().AsQueryable();
@@ -29,7 +29,7 @@ public class RiqlBasic_Tests
         var result = employees.ApplyRiql(riql);
 
         // Assert
-        result.Should().BeSameAs(employees);
+        result.AsEnumerable().Should().BeSameAs(employees);
     }
 
     [Theory]

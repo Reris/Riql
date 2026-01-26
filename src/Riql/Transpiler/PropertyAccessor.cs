@@ -8,22 +8,9 @@ using System.Text.Json.Serialization;
 
 namespace Riql.Transpiler;
 
-public class PropertyAccessor
+public class PropertyAccessor(JsonNamingPolicy? namingPolicy = null)
 {
     private static readonly ConcurrentDictionary<Type, Dictionary<string, PropertyInfo>> JsonPropertyInfos = new();
-
-    private readonly JsonNamingPolicy? _namingPolicy;
-
-    public PropertyAccessor()
-        : this(null)
-    {
-    }
-
-    public PropertyAccessor(JsonNamingPolicy? namingPolicy)
-    {
-        this._namingPolicy = namingPolicy;
-    }
-
 
     private Dictionary<string, PropertyInfo> MapProperties(Type type)
     {
@@ -51,7 +38,7 @@ public class PropertyAccessor
             return attribute.Name;
         }
 
-        return this._namingPolicy?.ConvertName(propertyName) ?? propertyName;
+        return namingPolicy?.ConvertName(propertyName) ?? propertyName;
     }
 
     public PropertyInfo? FindProperty(Type type, string name)
@@ -59,7 +46,7 @@ public class PropertyAccessor
         type = type ?? throw new ArgumentNullException(nameof(type));
         name = name ?? throw new ArgumentNullException(nameof(name));
 
-        var properties = PropertyAccessor.JsonPropertyInfos.GetOrAdd(type, t => this.MapProperties(type));
+        var properties = JsonPropertyInfos.GetOrAdd(type, _ => this.MapProperties(type));
         properties.TryGetValue(name, out var result);
         return result;
     }
@@ -77,7 +64,7 @@ public class PropertyAccessor
             var nullableType = pathExpression.Type.FindNullableValueType();
             if (nullableType != null)
             {
-                pathExpression = currentPath = Expression.Property(pathExpression, nameof(Nullable<int>.Value));
+                pathExpression = currentPath = Expression.Property(pathExpression, nameof(Nullable<>.Value));
                 expressionSteps.Add(currentPath);
             }
 

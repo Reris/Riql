@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using FluentAssertions;
+using AwesomeAssertions;
 using Riql.Tests.TestData;
 using Riql.Transpiler;
 using Riql.Transpiler.Rsql;
@@ -12,14 +12,14 @@ public class RiqlInvalid_Tests
 {
     private Unit[] GetUnits()
     {
-        return new[]
-        {
+        return
+        [
             new Unit(1, false),
             new Unit(2, true),
             new Unit(3, false),
             new Unit(4, true),
             new Unit(5, false)
-        };
+        ];
     }
 
     [Theory]
